@@ -1,84 +1,67 @@
-# Turborepo starter
+# Compreendido! Você quer uma explicação mais direta e focada em como construir e rodar as imagens Docker para os projetos web e docs individualmente, sem o Docker Compose.
 
-This Turborepo starter is maintained by the Turborepo core team.
+## 🐳 Como Rodar o Projeto com Docker (Individualmente)
+Este guia rápido mostrará como construir e executar suas aplicações web e docs usando Docker, criando uma imagem para cada projeto.
 
-## Using this example
+Pré-requisitos
+Certifique-se de ter o Docker instalado: https://www.docker.com/products/docker-desktop/
 
-Run the following command:
+Estrutura de Diretórios Esperada
+Assumimos que seus Dockerfiles estão dentro dos diretórios de suas respectivas aplicações:
 
-```sh
-npx create-turbo@latest
+my-turborepo/
+├── apps/
+│   ├── web/
+│   │   └── Dockerfile  <-- Dockerfile para o projeto web
+│   └── docs/
+│       └── Dockerfile  <-- Dockerfile para o projeto docs
+├── package.json
+└── ...
+1. Construir a Imagem Docker para o Projeto web
+Navegue até a raiz do seu monorepo no terminal (my-turborepo/).
+
+## Execute o seguinte comando para construir a imagem do seu projeto web:
+
+```bash
+docker build -t meu-app-web -f ./apps/web/Dockerfile .
 ```
 
-## What's inside?
+docker build: Comando para construir uma imagem.
+-t meu-app-web: Define o nome da imagem como meu-app-web.
+-f ./apps/web/Dockerfile: Indica o caminho para o Dockerfile do seu projeto web.
+.: O ponto final define o contexto do build como a raiz do seu monorepo. Isso é crucial para que seu Dockerfile possa copiar todo o código do projeto (COPY . .).
+2. Construir a Imagem Docker para o Projeto docs
+Com o terminal ainda na raiz do seu monorepo, execute o comando para construir a imagem do seu projeto docs:
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
+```Bash
+docker build -t meu-app-docs -f ./apps/docs/Dockerfile .
 ```
 
-### Develop
+-t meu-app-docs: Define o nome da imagem como meu-app-docs.
+-f ./apps/docs/Dockerfile: Indica o caminho para o Dockerfile do seu projeto docs.
 
-To develop all apps and packages, run the following command:
+3. Rodar os Containers Docker
+Após construir as imagens, você pode iniciar cada aplicação em seu próprio container.
 
-```
-cd my-turborepo
-pnpm dev
-```
+## Rodar o Projeto web
 
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
+```Bash
+docker run --rm -d -p 8080:3000 meu-app-web
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+docker run: Comando para iniciar um container a partir de uma imagem.
+--rm: Remove o container automaticamente quando ele para.
+-d: Roda o container em segundo plano (detached mode).
+-p 8080:3000: Mapeia a porta 8080 da sua máquina para a porta 3000 do container (web deve estar exposto na porta 3000 no Dockerfile).
+meu-app-web: O nome da imagem que você acabou de construir.
+Você poderá acessar o projeto web em seu navegador via http://localhost:8080.
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+Rodar o Projeto docs
 
+```bash
+docker run --rm -d -p 8081:3001 meu-app-docs
 ```
-npx turbo link
-```
 
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+-p 8081:3001: Mapeia a porta 8081 da sua máquina para a porta 3001 do container (docs deve estar exposto na porta 3001 no Dockerfile).
+meu-app-docs: O nome da imagem que você acabou de construir.
+Você poderá acessar o projeto docs em seu navegador via http://localhost:8081.
