@@ -1,5 +1,3 @@
-# Compreendido! Você quer uma explicação mais direta e focada em como construir e rodar as imagens Docker para os projetos web e docs individualmente, sem o Docker Compose.
-
 ## 🐳 Como Rodar o Projeto com Docker (Individualmente)
 Este guia rápido mostrará como construir e executar suas aplicações web e docs usando Docker, criando uma imagem para cada projeto.
 
