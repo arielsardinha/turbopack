@@ -7,6 +7,7 @@ Certifique-se de ter o Docker instalado: https://www.docker.com/products/docker-
 
 Estrutura de Diretórios Esperada:
 
+```text
 my-turborepo/
 ├── apps/
 │   ├── web/
@@ -15,7 +16,7 @@ my-turborepo/
 │       └── Dockerfile  <-- Dockerfile para o projeto docs
 ├── package.json
 └── ...
-
+```
 1. Construir a Imagem Docker para o Projeto web:
 
 Navegue até a raiz do monorepo no terminal (my-turborepo/).
